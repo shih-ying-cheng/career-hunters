@@ -37,3 +37,19 @@ button,input,select,textarea,.button{font:inherit;min-height:48px;border-radius:
 
 .course-evidence{padding:14px;margin:8px 0 12px;border-left:3px solid var(--gold);background:rgba(143,99,210,.12);border-radius:0 8px 8px 0}
 .radar-controls small{display:block;line-height:1.4}
+
+.map-card-art .boss-sprite { animation: hover-sprite 3.6s ease-in-out infinite; }
+.motion-player { margin: 0 0 12px; }
+.motion-scene { position: relative; isolation: isolate; overflow: hidden; width: min(100%,440px); aspect-ratio: 6/5; border: 1px solid var(--line); border-radius: 10px; }
+.motion-scene img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.motion-sweep { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(110deg, transparent 42%, #ffe28b44 51%, transparent 60%); opacity: 0; }
+.motion-steps { padding-left: 1.6em; margin: 0 0 10px; }
+.motion-steps li { padding: 4px 8px; border-radius: 5px; }
+.playing .motion-scene img { animation: course-motion-frame 4.5s ease-in-out both; }
+.playing .motion-sweep { animation: course-motion-sweep 4.5s linear both; }
+.playing .motion-steps li { animation: course-motion-step 1.5s linear both; }
+.playing .motion-steps li:nth-child(2) { animation-delay: 1.5s; }
+.playing .motion-steps li:nth-child(3) { animation-delay: 3s; }
+@keyframes course-motion-frame { 0%,100% { transform: scale(1); } 35% { transform: scale(1.11) translateX(2%); } 68% { transform: scale(1.11) translateX(-2%); } }
+@keyframes course-motion-sweep { 0% { transform: translateX(-100%); opacity: 0; } 15%,85% { opacity: 1; } 100% { transform: translateX(100%); opacity: 0; } }
+@keyframes course-motion-step { 0%,90% { background: #ffd779; color: #251633; } 100% { background: transparent; color: inherit; } }

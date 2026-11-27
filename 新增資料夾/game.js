@@ -366,7 +366,17 @@ function group() {
       return `<details class="course-entry"><summary>
         <img class="course-image" src="art/courses/${imageOffset + n}.webp" width="225" height="188" loading="lazy" decoding="async" alt="${esc(course[0])}實作示意">
         <span><strong>${course[0]}</strong><span class="course-topic">${course[1]}</span></span>
-      </summary><div class="course-evidence">
+      </summary>
+      <div class="motion-player">
+        <div class="motion-scene" hidden>
+          <img src="art/courses/${imageOffset + n}.webp" alt="" width="225" height="188" loading="lazy">
+          <span class="motion-sweep" aria-hidden="true"></span>
+        </div>
+        <div class="row"><button type="button" data-play-motion>播放實作動畫</button></div>
+        <ol class="motion-steps" aria-label="實作步驟">
+          ${courseMotionSteps[g][n].split('／').map(step => `<li>${esc(step)}</li>`).join('')}
+        </ol>
+      </div><div class="course-evidence">
         <p><b>實作情境</b>　${activity}</p>
         <p><b>練習能力</b>　${training}</p>
         <p><b>雷達圖線索</b>　${clues}。任務中哪些動作可以作為你評分的證據？</p>
@@ -394,6 +404,36 @@ function group() {
       <p class="muted">截圖使用已儲存的內容。修改後請先儲存，再下載圖片。</p>
     </form>` : '<p class="muted">教師開放最後反思後，即可填寫成果卡。</p>'}
     <p id="card-status" class="status" role="status"></p></section></div>`;
+  root.querySelectorAll('[data-play-motion]').forEach(button => {
+    const player = button.closest('.motion-player');
+    const scene = player.querySelector('.motion-scene');
+    const details = player.closest('details');
+    button.onclick = () => {
+      if (player.classList.contains('playing')) {
+        player.classList.remove('playing');
+        button.textContent = '重播實作動畫';
+        return;
+      }
+      scene.hidden = false;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        button.textContent = '查看實作步驟';
+        return;
+      }
+      player.classList.add('playing');
+      button.textContent = '停止動畫';
+    };
+    player.querySelector('.motion-sweep').addEventListener('animationend', event => {
+      if (event.animationName !== 'course-motion-sweep') return;
+      player.classList.remove('playing');
+      button.textContent = '重播實作動畫';
+    });
+    details.addEventListener('toggle', () => {
+      if (details.open) return;
+      player.classList.remove('playing');
+      scene.hidden = true;
+      button.textContent = '播放實作動畫';
+    });
+  });
   bind('back', () => render('map'));
   bind('read', () => act(0,{done:true},'已記錄圖鑑閱讀。'));
   bind('fight', () => {
